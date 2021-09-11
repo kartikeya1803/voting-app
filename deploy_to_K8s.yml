@@ -20,22 +20,22 @@ stages:
     steps:
     - task: Docker@2
       inputs:
-        containerRegistry: 'Votingappimages'
-        repository: 'worker-im'
+        containerRegistry: 'docker-hub-connection'
+        repository: 'kar0169/worker-im'
         command: 'buildAndPush'
         Dockerfile: '$(Build.SourcesDirectory)/worker/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)/worker'
     - task: Docker@2
       inputs:
-        containerRegistry: 'Votingappimages'
-        repository: 'result-im'
+        containerRegistry: 'docker-hub-connection'
+        repository: 'kar0169/result-im'
         command: 'buildAndPush'
         Dockerfile: '$(Build.SourcesDirectory)/result/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)/result'
     - task: Docker@2
       inputs:
-        containerRegistry: 'Votingappimages'
-        repository: 'vote-im'
+        containerRegistry: 'docker-hub-connection'
+        repository: 'kar0169/vote-im'
         command: 'buildAndPush'
         Dockerfile: '$(Build.SourcesDirectory)/vote/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)/vote'
@@ -75,8 +75,8 @@ stages:
         namespace: 'default'
         manifests: '$(System.ArtifactsDirectory)/deployment.yml'
         containers: |
-          'votingappimages.azurecr.io/result-im:$(tag)'
-          'votingappimages.azurecr.io/worker-im:$(tag)'
-          'votingappimages.azurecr.io/vote-im:$(tag)'
+          'kar0169/result-im:$(tag)'
+          'kar0169/worker-im:$(tag)'
+          'kar0169/vote-im:$(tag)'
           'postgres:latest'
           'redis:5.0-alpine3.10'
