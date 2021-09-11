@@ -22,7 +22,20 @@ stages:
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)/result'
-    
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'Votingappimages'
+        repository: 'vote-im'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        buildContext: '$(Build.SourcesDirectory)/vote'
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'Votingappimages'
+        repository: 'worker'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        buildContext: '$(Build.SourcesDirectory)/worker'
     
     - task: CopyFiles@2
       inputs:
@@ -56,8 +69,8 @@ stages:
         namespace: 'default'
         manifests: '$(System.ArtifactsDirectory)/deployment.yml'
         containers:  |
-         'kar0169/vote-im'
-         'kar0169/result-im'
-         'kar0169/worker-im'
-         'postgres:latest'
-         'redis:5.0-alpine3.10'
+          'votingappimages.azurecr.io/result-im'
+          'votingappimages.azurecr.io/worker-im'
+          'votingappimages.azurecr.io/vote-im'
+          'postgres:latest'
+          'redis:5.0-alpine3.10'
