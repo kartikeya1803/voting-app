@@ -18,31 +18,6 @@ stages:
   - job:
     displayName: 'Publish Artifacts'
     steps:
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'Votingappimages'
-        repository: 'votingappimages.azurecr.io/worker-im'
-        command: 'buildAndPush'
-        Dockerfile: '$(Build.SourcesDirectory)/worker/Dockerfile'
-        buildContext: '$(Build.SourcesDirectory)/worker'
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'Votingappimages'
-        repository: 'votingappimages.azurecr.io/result-im'
-        command: 'buildAndPush'
-        Dockerfile: '$(Build.SourcesDirectory)/result/Dockerfile'
-        buildContext: '$(Build.SourcesDirectory)/result'
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'Votingappimages'
-        repository: 'votingappimages.azurecr.io/vote-im'
-        command: 'buildAndPush'
-        Dockerfile: '$(Build.SourcesDirectory)/vote/Dockerfile'
-        buildContext: '$(Build.SourcesDirectory)/vote'
-        addPipelineData: false
-        addBaseImageData: false
-    
-    
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(System.DefaultWorkingDirectory)'
@@ -67,16 +42,26 @@ stages:
         buildType: 'current'
         artifactName: 'manifests'
         itemPattern: '**/*.yml'
-        targetPath: '$(System.ArtifactsDirectory)'     
+        targetPath: '$(System.ArtifactsDirectory)'   
+    - task: KubernetesManifest@0
+      inputs:
+        action: 'createSecret'
+        kubernetesServiceConnection: 'K8scluster-connection'
+        namespace: 'default'
+        secretType: 'dockerRegistry'
+        secretName: 'imgpullscrt'
+        dockerRegistryEndpoint: 'Votingappimages'
+          
     - task: KubernetesManifest@0
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'K8scluster-connection'
         namespace: 'default'
         manifests: '$(System.ArtifactsDirectory)/deployment-acr.yml'
+        imagePullSecrets: 'imgpullscrt'
         containers: |
-          'votingappimages.azurecr.io/result-im:$(tag)'
-          'votingappimages.azurecr.io/worker-im:$(tag)'
-          'votingappimages.azurecr.io/vote-im:$(tag)'
+          'votingappimages.azurecr.io/result-im:32'
+          'votingappimages.azurecr.io/worker-im:32'
+          'votingappimages.azurecr.io/vote-im:32'
           'postgres:latest'
           'redis:5.0-alpine3.10'
