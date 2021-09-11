@@ -118,7 +118,7 @@ spec:
         app: result
     spec:
       containers:
-      - image: kar0169/result-im
+      - image: votingappimages.azurecr.io/result-im
         name: result
         ports:
         - containerPort: 80
@@ -161,7 +161,7 @@ spec:
         app: vote
     spec:
       containers:
-      - image: kar0169/vote-im
+      - image: votingappimages.azurecr.io/vote-im
         name: vote
         ports:
         - containerPort: 80
@@ -204,7 +204,7 @@ spec:
         app: worker
     spec:
       containers:
-      - image: kar0169/worker-im
+      - image: votingappimages.azurecr.io/worker-im
         name: worker          
              
   
