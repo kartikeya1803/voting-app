@@ -20,21 +20,21 @@ stages:
     steps:
     - task: Docker@2
       inputs:
-        containerRegistry: 'Votingappimages'
+        containerRegistry: 'docker-hub-connection'
         repository: 'worker-im'
         command: 'buildAndPush'
         Dockerfile: '$(Build.SourcesDirectory)/worker/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)/worker'
     - task: Docker@2
       inputs:
-        containerRegistry: 'Votingappimages'
+        containerRegistry: 'docker-hub-connection'
         repository: 'result-im'
         command: 'buildAndPush'
         Dockerfile: '$(Build.SourcesDirectory)/result/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)/result'
     - task: Docker@2
       inputs:
-        containerRegistry: 'Votingappimages'
+        containerRegistry: 'docker-hub-connection'
         repository: 'vote-im'
         command: 'buildAndPush'
         Dockerfile: '$(Build.SourcesDirectory)/vote/Dockerfile'
@@ -74,7 +74,7 @@ stages:
         kubernetesServiceConnection: 'K8scluster-connection'
         namespace: 'default'
         manifests: '$(System.ArtifactsDirectory)/deployment.yml'
-        containers:  |
+        containers: |
           'result-im:$(tag)'
           'worker-im:$(tag)'
           'vote-im:$(tag)'
