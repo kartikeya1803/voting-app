@@ -38,5 +38,12 @@ stages:
       inputs:
         buildType: 'current'
         artifactName: 'manifests'
-        itemPattern: '**/*.yaml'
+        itemPattern: '**/*.yml'
         targetPath: '$(System.ArtifactsDirectory)'     
+    - task: KubernetesManifest@0
+      inputs:
+        action: 'deploy'
+        kubernetesServiceConnection: 'K8scluster-connection'
+        namespace: 'default'
+        manifests: '$(System.ArtifactsDirectory)/deployment.yml'
+        containers: 'in28min/currency-exchange-devops:$(tag)'
