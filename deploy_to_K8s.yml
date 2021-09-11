@@ -25,6 +25,8 @@ stages:
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)/result'
+        addPipelineData: false
+        addBaseImageData: false
     - task: Docker@2
       inputs:
         containerRegistry: 'Votingappimages'
@@ -32,6 +34,8 @@ stages:
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)/vote'
+        addPipelineData: false
+        addBaseImageData: false
     - task: Docker@2
       inputs:
         containerRegistry: 'Votingappimages'
