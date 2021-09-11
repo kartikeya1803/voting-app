@@ -68,6 +68,15 @@ stages:
         artifactName: 'manifests'
         itemPattern: '**/*.yml'
         targetPath: '$(System.ArtifactsDirectory)'     
+    
+    - task: KubernetesManifest@0
+      inputs:
+        action: 'createSecret'
+        kubernetesServiceConnection: 'K8scluster-connection'
+        namespace: 'default'
+        secretType: 'dockerRegistry'
+        secretName: 'imgpullscrt'
+        dockerRegistryEndpoint: 'Votingappimages'
     - task: KubernetesManifest@0
       inputs:
         action: 'deploy'
