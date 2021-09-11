@@ -15,6 +15,15 @@ stages:
   - job:
     displayName: 'Publish Artifacts'
     steps:
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'Votingappimages'
+        repository: 'result-im'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        buildContext: '$(Build.SourcesDirectory)/result'
+    
+    
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(System.DefaultWorkingDirectory)'
