@@ -1,0 +1,43 @@
+version: "3.7"
+
+services:
+  vote:
+    image: kar0169/vote-im
+    build:
+      context: ./vote
+      dockerfile: Dockerfile
+    volumes:
+     - ./vote:/app
+    ports:
+      - "5000:80"
+
+  redis:
+    image: redis:5.0-alpine3.10
+    ports: ["6379"]
+
+  worker:
+    image: kar0169/worker-im
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  result:
+    image: kar0169/result-im
+    build:
+      context: ./result
+      dockerfile: Dockerfile
+    volumes:
+      - ./result:/app
+    ports:
+      - "5001:80"
+      - "5858:5858"
+volumes:
+  db-data:
