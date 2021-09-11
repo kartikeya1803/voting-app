@@ -46,4 +46,9 @@ stages:
         kubernetesServiceConnection: 'K8scluster-connection'
         namespace: 'default'
         manifests: '$(System.ArtifactsDirectory)/deployment.yml'
-        containers: 'in28min/currency-exchange-devops:$(tag)'
+        containers:  |
+         'kar0169/vote-im'
+         'kar0169/result-im'
+         'kar0169/worker-im'
+         'postgres:latest'
+         'redis:5.0-alpine3.10'
