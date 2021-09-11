@@ -23,23 +23,21 @@ stages:
         containerRegistry: 'Votingappimages'
         repository: 'worker-im'
         command: 'buildAndPush'
-        Dockerfile: 'Dockerfile'
+        Dockerfile: '$(Build.SourcesDirectory)/worker/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)/worker'
     - task: Docker@2
       inputs:
         containerRegistry: 'Votingappimages'
         repository: 'result-im'
         command: 'buildAndPush'
-        Dockerfile: 'Dockerfile'
+        Dockerfile: '$(Build.SourcesDirectory)/result/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)/result'
-        addPipelineData: false
-        addBaseImageData: false
     - task: Docker@2
       inputs:
         containerRegistry: 'Votingappimages'
         repository: 'vote-im'
         command: 'buildAndPush'
-        Dockerfile: 'Dockerfile'
+        Dockerfile: '$(Build.SourcesDirectory)/vote/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)/vote'
         addPipelineData: false
         addBaseImageData: false
