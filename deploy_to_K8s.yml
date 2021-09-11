@@ -75,8 +75,8 @@ stages:
         namespace: 'default'
         manifests: '$(System.ArtifactsDirectory)/deployment.yml'
         containers:  |
-          'votingappimages.azurecr.io/result-im:$(tag)'
-          'votingappimages.azurecr.io/worker-im:$(tag)'
-          'votingappimages.azurecr.io/vote-im:$(tag)'
+          'result-im:$(tag)'
+          'worker-im:$(tag)'
+          'vote-im:$(tag)'
           'postgres:latest'
           'redis:5.0-alpine3.10'
