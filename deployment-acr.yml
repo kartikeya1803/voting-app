@@ -118,13 +118,14 @@ spec:
         app: result
     spec:
       containers:
-      - image: votingappimages.azurecr.io/result-im
+      - image: votingappimages.azurecr.io/result-im:32
         name: result
         ports:
         - containerPort: 80
           name: result
       imagePullSecrets:
-      - name: imgpullscrt
+      - name: regcred
+      
 ---
 apiVersion: v1
 kind: Service
@@ -162,13 +163,14 @@ spec:
         app: vote
     spec:
       containers:
-      - image: votingappimages.azurecr.io/vote-im
+      - image: votingappimages.azurecr.io/vote-im:32
         name: vote
         ports:
         - containerPort: 80
           name: vote
       imagePullSecrets:
-      - name: imgpullscrt
+      - name: regcred
+      
 
 ---
 apiVersion: v1
@@ -207,10 +209,10 @@ spec:
         app: worker
     spec:
       containers:
-      - image: votingappimages.azurecr.io/worker-im
+      - image: votingappimages.azurecr.io/worker-im:32
         name: worker          
       imagePullSecrets:
-      - name: imgpullscrt      
+      - name: regcred    
   
   
   

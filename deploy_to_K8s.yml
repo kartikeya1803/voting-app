@@ -21,22 +21,22 @@ stages:
     steps:
     - task: Docker@2
       inputs:
-        containerRegistry: 'docker-hub-connection'
-        repository: 'kar0169/worker-im'
+        containerRegistry: 'Votingappimages'
+        repository: 'worker-im'
         command: 'buildAndPush'
         Dockerfile: '$(Build.SourcesDirectory)/worker/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)/worker'
     - task: Docker@2
       inputs:
-        containerRegistry: 'docker-hub-connection'
-        repository: 'kar0169/result-im'
+        containerRegistry: 'Votingappimages'
+        repository: 'result-im'
         command: 'buildAndPush'
         Dockerfile: '$(Build.SourcesDirectory)/result/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)/result'
     - task: Docker@2
       inputs:
-        containerRegistry: 'docker-hub-connection'
-        repository: 'kar0169/vote-im'
+        containerRegistry: 'Votingappimages'
+        repository: 'vote-im'
         command: 'buildAndPush'
         Dockerfile: '$(Build.SourcesDirectory)/vote/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)/vote'
@@ -74,10 +74,11 @@ stages:
         action: 'deploy'
         kubernetesServiceConnection: 'K8s-cluster-connection'
         namespace: 'default'
-        manifests: '$(System.ArtifactsDirectory)/deployment.yml'
+        manifests: '$(System.ArtifactsDirectory)/deployment-acr.yml'
         containers: |
-          'kar0169/result-im:$(tag)'
-          'kar0169/worker-im:$(tag)'
-          'kar0169/vote-im:$(tag)'
+          'votingappimages.azurecr.io/result-im:$(tag)'
+          'votingappimages.azurecr.io/worker-im:$(tag)'
+          'votingappimages.azurecr.io/vote-im:$(tag)'
           'postgres:latest'
           'redis:5.0-alpine3.10'
+        imagePullSecrets: 'regcred'
