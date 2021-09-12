@@ -14,10 +14,36 @@ variables:
 
 stages:
 - stage: Build
+  displayName: Build Images and Publish Artifacts
   jobs:
   - job:
     displayName: 'Publish Artifacts'
     steps:
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'docker-hub-connection'
+        repository: 'kar0169/worker-im'
+        command: 'buildAndPush'
+        Dockerfile: '$(Build.SourcesDirectory)/worker/Dockerfile'
+        buildContext: '$(Build.SourcesDirectory)/worker'
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'docker-hub-connection'
+        repository: 'kar0169/result-im'
+        command: 'buildAndPush'
+        Dockerfile: '$(Build.SourcesDirectory)/result/Dockerfile'
+        buildContext: '$(Build.SourcesDirectory)/result'
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'docker-hub-connection'
+        repository: 'kar0169/vote-im'
+        command: 'buildAndPush'
+        Dockerfile: '$(Build.SourcesDirectory)/vote/Dockerfile'
+        buildContext: '$(Build.SourcesDirectory)/vote'
+        addPipelineData: false
+        addBaseImageData: false
+    
+    
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(System.DefaultWorkingDirectory)'
@@ -30,7 +56,7 @@ stages:
         publishLocation: 'Container'
 
 - stage: Deploy
-  displayName: Deploy image
+  displayName: Deploy to K8s
   jobs:  
   - job: Deploy
     displayName: Deploy
@@ -42,26 +68,16 @@ stages:
         buildType: 'current'
         artifactName: 'manifests'
         itemPattern: '**/*.yml'
-        targetPath: '$(System.ArtifactsDirectory)'   
-    - task: KubernetesManifest@0
-      inputs:
-        action: 'createSecret'
-        kubernetesServiceConnection: 'K8scluster-connection'
-        namespace: 'default'
-        secretType: 'dockerRegistry'
-        secretName: 'imgpullscrt'
-        dockerRegistryEndpoint: 'Votingappimages'
-          
+        targetPath: '$(System.ArtifactsDirectory)'     
     - task: KubernetesManifest@0
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: 'K8scluster-connection'
         namespace: 'default'
-        manifests: '$(System.ArtifactsDirectory)/deployment-acr.yml'
-        imagePullSecrets: 'imgpullscrt'
+        manifests: '$(System.ArtifactsDirectory)/deployment.yml'
         containers: |
-          'votingappimages.azurecr.io/result-im:32'
-          'votingappimages.azurecr.io/worker-im:32'
-          'votingappimages.azurecr.io/vote-im:32'
+          'kar0169/result-im:$(tag)'
+          'kar0169/worker-im:$(tag)'
+          'kar0169/vote-im:$(tag)'
           'postgres:latest'
           'redis:5.0-alpine3.10'
