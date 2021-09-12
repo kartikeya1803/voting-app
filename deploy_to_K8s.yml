@@ -72,7 +72,7 @@ stages:
     - task: KubernetesManifest@0
       inputs:
         action: 'deploy'
-        kubernetesServiceConnection: 'K8scluster-connection'
+        kubernetesServiceConnection: 'K8s-cluster-connection'
         namespace: 'default'
         manifests: '$(System.ArtifactsDirectory)/deployment.yml'
         containers: |
